@@ -1,4 +1,4 @@
-name = "InexactFloat"
+name = "InexactFloats"
 uuid = "c8d264e3-280f-469c-9939-8fffaac96e00"
 authors = ["alto <victor1301166040@gmail.com> and contributors"]
 version = "0.1.0"
