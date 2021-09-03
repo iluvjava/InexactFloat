@@ -21,7 +21,9 @@ let
 end
 
 
-
+# ==============================================================================
+# Type definition
+# ==============================================================================
 struct InexactFloat <: AbstractFloat
     x::Float64 # Original number 
     δ::Float64 # Absolute error
@@ -148,10 +150,61 @@ end
 
 # TODO: Power is also Inexact 
 
-
-# Oderness, equality of the number ---------------------------------------------
+# ==============================================================================
+# Oderness, equality of the number 
 # This will be needed to run the linear algebra libraries and other common
 # Numerical Algorithms. 
+# * Under strict mode: Weak/Strong Partial Order
+# * Under non strict mode: Total Rrder
+# ==============================================================================
+
+function Base.isequal(a::InexactFloat, b::InexactFloat)
+    if IsStrictMode()
+        return a.x == b.x && a.δ = b.δ && a.ϵ = b.ϵ
+    else
+        return a.x == b.x
+    end
+end
+
+function Base.:≈(a::InexactFloat, b::InexactFloat)
+    if IsStrictMode()
+        d = a - b 
+        return d.δ < 1e-15
+    else
+        a.x ≈ b.x
+    end
+end
+
+function Base.:≈(a::InexactFloat, b::AbstractFloat)
+    if IsStrictMode()
+        d = a - b 
+        return d.δ < 1e-15
+    else
+        a.x ≈ b
+    end
+end
+
+function Base.:≈(a::AbstractFloat, b::InexactFloat)
+    return b ≈ a
+end
+
+function Base.:<=(a::InexactFloat, b::InexactFloat)
+    if IsStrictMode()
+        a.x + a.δ <= b.x - b.δ
+    else
+        return a.x <= b.x
+    end
+end
+
+function Base.:<=(a::InexactFloat, b::AbstractFloat)
+    if IsStrictMode()
+        return a.x + a.δ <= b
+    else
+        return a.x <= b
+    end
+end
+
+
 
 
 # Comon Functions on this type of numbers --------------------------------------
