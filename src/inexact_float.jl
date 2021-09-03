@@ -171,7 +171,7 @@ function Base.:≈(a::InexactFloat, b::InexactFloat)
         d = a - b 
         return d.δ < 1e-15
     else
-        a.x ≈ b.x
+        return a.x ≈ b.x
     end
 end
 
@@ -180,7 +180,7 @@ function Base.:≈(a::InexactFloat, b::AbstractFloat)
         d = a - b 
         return d.δ < 1e-15
     else
-        a.x ≈ b
+        return a.x ≈ b
     end
 end
 
@@ -190,7 +190,7 @@ end
 
 function Base.:<=(a::InexactFloat, b::InexactFloat)
     if IsStrictMode()
-        a.x + a.δ <= b.x - b.δ
+        return a.x + a.δ <= b.x + b.δ
     else
         return a.x <= b.x
     end
